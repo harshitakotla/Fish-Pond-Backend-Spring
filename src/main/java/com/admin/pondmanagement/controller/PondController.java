@@ -2,11 +2,13 @@ package com.admin.pondmanagement.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.admin.pondmanagement.model.Pond;
 import com.admin.pondmanagement.model.Sensor;
 import com.admin.pondmanagement.repository.PondRepository;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +26,15 @@ public class PondController {
     }
 
     @PostMapping
-    public Pond addPond(@RequestBody Pond pond) {
+    public Pond addPond(@RequestParam("name") String name,
+                        @RequestParam("location") String location,
+                        @RequestParam("size") String size,
+                        @RequestParam("image") MultipartFile image) throws IOException {
+        Pond pond = new Pond();
+        pond.setName(name);
+        pond.setLocation(location);
+        pond.setSize(size);
+        pond.setImage(image.getBytes()); // Convert image file to byte array
         return pondRepository.save(pond);
     }
 
@@ -48,7 +58,6 @@ public class PondController {
         return pondRepository.findById(pondId);
     }
 
-    // Update an existing pond
     @PutMapping("/{pondId}")
     public Pond updatePond(@PathVariable String pondId, @RequestBody Pond updatedPond) {
         return pondRepository.findById(pondId)
@@ -57,12 +66,12 @@ public class PondController {
                     pond.setLocation(updatedPond.getLocation());
                     pond.setSize(updatedPond.getSize());
                     pond.setSensors(updatedPond.getSensors());
+                    pond.setImage(updatedPond.getImage()); // Update image if provided
                     return pondRepository.save(pond);
                 })
                 .orElseThrow(() -> new RuntimeException("Pond not found with ID: " + pondId));
     }
 
-    // Delete a specific pond
     @DeleteMapping("/{pondId}")
     public String deletePond(@PathVariable String pondId) {
         pondRepository.deleteById(pondId);
