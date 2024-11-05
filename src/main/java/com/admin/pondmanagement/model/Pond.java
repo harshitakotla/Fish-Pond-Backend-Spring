@@ -15,9 +15,8 @@ public class Pond {
     @Id // Marks this field as the primary key
     private String id;
     private String name;
-    private String location; // Field for location
-    private String size; // Field for size
-    private byte[] image; // Field for storing the pond image as binary data
+    private String location; // New field for location
+    private String size; // New field for size
     private List<Sensor> sensors = new ArrayList<>();
 
     @CreatedDate // Automatically set the creation timestamp
@@ -29,13 +28,12 @@ public class Pond {
     // Default constructor (required by MongoDB and Spring Data)
     public Pond() {}
 
-    // Constructor with ID, name, location, size, and image
-    public Pond(String id, String name, String location, String size, byte[] image) {
+    // Constructor with ID, name, location, and size
+    public Pond(String id, String name, String location, String size) {
         this.id = id;
         this.name = name;
         this.location = location;
         this.size = size;
-        this.image = image;
     }
 
     // Getters and Setters
@@ -69,14 +67,6 @@ public class Pond {
 
     public void setSize(String size) {
         this.size = size;
-    }
-
-    public byte[] getImage() {
-        return image;
-    }
-
-    public void setImage(byte[] image) {
-        this.image = image;
     }
 
     public List<Sensor> getSensors() {
